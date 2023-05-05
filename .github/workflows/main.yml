@@ -1,9 +1,10 @@
 name: GeoIP
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 0'
-      
+
 jobs:
   release:
     runs-on: ubuntu-latest

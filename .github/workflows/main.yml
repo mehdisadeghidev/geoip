@@ -22,7 +22,7 @@ jobs:
           zip GeoLite2-Country-CSV.zip GeoLite2-Country-Locations-en.csv GeoLite2-Country-Blocks-IPv4.csv GeoLite2-Country-Blocks-IPv6.csv
       - name: Set release name
         id: set_release_name
-        run: echo "::set-env name=RELEASE_NAME::$(date +'%Y.%m.%d')"
+        run: echo "RELEASE_NAME=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
       - name: Create release
         id: create_release
         uses: actions/create-release@v1

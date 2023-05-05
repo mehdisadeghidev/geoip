@@ -20,25 +20,21 @@ jobs:
       - name: Compress files into a ZIP
         run: |
           zip GeoLite2-Country-CSV.zip GeoLite2-Country-Locations-en.csv GeoLite2-Country-Blocks-IPv4.csv GeoLite2-Country-Blocks-IPv6.csv
-      - name: Set release name
-        id: set_release_name
-        run: echo "RELEASE_NAME=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Set tag name
+        run:  echo "TAG_NAME=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
+      - name: Upload to Releases
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.RELEASE_NAME }}
-          release_name: ${{ env.RELEASE_NAME }}
-          draft: false
-          prerelease: false
-      - name: Upload ZIP
-        uses: actions/upload-release-asset@v1
+          tag_name: ${{ env.TAG_NAME }}
+          body: ${{ env.TAG_NAME }}
+          files: |
+            GeoLite2-Country-CSV.zip
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 2
+          delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./GeoLite2-Country-CSV.zip
-          asset_name: GeoLite2-Country-CSV.zip
-          asset_content_type: application/zip

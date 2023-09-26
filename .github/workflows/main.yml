@@ -19,6 +19,7 @@ jobs:
           wget -O GeoLite2-Country-Locations-en.csv https://github.com/PrxyHunter/GeoLite2/releases/latest/download/GeoLite2-Country-Locations-en.csv
           wget -O GeoLite2-Country-Blocks-IPv4.csv https://github.com/PrxyHunter/GeoLite2/releases/latest/download/GeoLite2-Country-Blocks-IPv4.csv
           wget -O GeoLite2-Country-Blocks-IPv6.csv https://github.com/PrxyHunter/GeoLite2/releases/latest/download/GeoLite2-Country-Blocks-IPv6.csv
+          awk -F ',' -v filter="$(awk -F, '{if ($5 == "IR") print $1}' GeoLite2-Country-Locations-en.csv)" '$2 == filter {print $1}' GeoLite2-Country-Blocks-IPv4.csv > GeoLite2-Country-IR.txt
       - name: Compress files into a ZIP
         run: |
           zip GeoLite2-Country-CSV.zip GeoLite2-Country-Locations-en.csv GeoLite2-Country-Blocks-IPv4.csv GeoLite2-Country-Blocks-IPv6.csv
@@ -33,6 +34,7 @@ jobs:
           body: ${{ env.TAG_NAME }}
           files: |
             GeoLite2-Country-CSV.zip
+            GeoLite2-Country-IR.txt
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
         with:
